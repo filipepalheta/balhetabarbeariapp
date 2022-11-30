@@ -5,7 +5,11 @@ import Servicos from "../models/Servicos.js"
 class ServicosController {
 
     static getServices = async (req, res) => {
-        const services = await Servicos.findAll({})
+        const services = await Servicos.findAll({
+            where: {
+                status: 'ativo'
+            }
+        })
 
         console.log('opa')
 
