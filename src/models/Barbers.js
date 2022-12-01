@@ -20,6 +20,10 @@ const Barbers = instance.define('barbers', {
     },
     id_usuario: {
         type: DataTypes.INTEGER
+    },
+    foto_site: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     createdAt: false,
