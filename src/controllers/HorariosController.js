@@ -95,7 +95,7 @@ class HorariosController {
         const barberID = req.query.barberID
         const dateMoment = moment(dia)
         const dateFormated = dateMoment.format('YYYY-MM-DD')
-        var barbers = []
+        var barber = []
         const daysOfTheWeek = [
             'Domingo',
             'Segunda',
@@ -166,7 +166,7 @@ class HorariosController {
             hours: hoursBarbers
         }
 
-        barbers.push(objBarber)
+        barber.push(objBarber)
 
 
         res.json({ success: true, barbers })
