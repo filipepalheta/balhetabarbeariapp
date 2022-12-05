@@ -13,7 +13,7 @@ const HorariosSupensos = instance.define('horarios_suspensos', {
         allowNull: false
     },
     dia: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false
     },
     horario: {

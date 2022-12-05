@@ -1,7 +1,7 @@
 import instance from "../config/conn.js";
 import { DataTypes } from "sequelize";
 
-const HorariosBarbeiros = instance.define('horarios_barbeiros', {
+const HorariosBarbeiros = instance.define('horario_barbeiros', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

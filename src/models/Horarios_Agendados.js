@@ -21,7 +21,7 @@ const HorariosAgendados = instance.define('horarios_agendados', {
         allowNull: false
     },
     dia_semana: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false
     },
     dia_semana_string: {
