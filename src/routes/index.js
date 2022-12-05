@@ -17,6 +17,6 @@ router.get('/services', ServicosController.getServices)
 
 router.get('/barbers', BarbeirosController.getBarbeiros)
 
-router.get('/hours-suspendeds', HorariosController.getSuspendedHours)
+router.get('/hours-suspendeds', HorariosController.getSuspendedHoursFromBarber)
 
 export default router;
