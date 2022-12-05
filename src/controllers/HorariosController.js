@@ -168,8 +168,6 @@ class HorariosController {
 
         barber.push(objBarber)
 
-
-
         res.json({ success: true, barber })
 
     }
