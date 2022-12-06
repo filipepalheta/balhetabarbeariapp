@@ -105,6 +105,7 @@ class HorariosController {
         ]
         var arrayDateHoursSchelueds = []
         var datesOccupeds = []
+        var datesFree = []
 
         for (let i = 1; i <= 15; i++) {
             let dateMomentLoop = moment(today).subtract(1, 'day')
@@ -171,10 +172,12 @@ class HorariosController {
         arrayDateHoursSchelueds.map((value) => {
             if(value.hours.length < 1){
                 datesOccupeds.push(value.date)
+            }else{
+                datesFree.push(value.date)
             }
         })
 
-        res.json({ success: true, arrayDateHoursSchelueds, datesOccupeds })
+        res.json({ success: true, arrayDateHoursSchelueds, datesOccupeds, datesFree })
 
     }
 
