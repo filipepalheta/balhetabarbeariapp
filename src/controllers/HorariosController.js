@@ -91,11 +91,9 @@ class HorariosController {
 
     static getSuspendedHoursFromBarber = async (req, res) => {
         const today = new Date()
-        const dia = req.query.dia
         const barberID = req.query.barberID
-        const dateMoment = moment(dia)
+        const dateMoment = moment(today)
         const dateFormated = dateMoment.format('YYYY-MM-DD')
-        var barber = []
         const daysOfTheWeek = [
             'Domingo',
             'Segunda',
@@ -105,70 +103,78 @@ class HorariosController {
             'Sexta',
             'Sábado'
         ]
+        var arrayDateHoursSchelueds = []
+        var datesOccupeds = []
 
-        var indexes = []
-        var arrayHoursScheludes = []
-        var arrayHoursSuspendeds = []
+        for (let i = 1; i <= 15; i++) {
+            let dateMomentLoop = moment(today).subtract(1, 'day')
+            let dateSelect = dateMomentLoop.add(i, 'days')
+            let dateSelectFormated = dateSelect.format('YYYY-MM-DD')
+            var objDate;
+            var arrayHandlerHoursOccupeds = []
+            var arrayHandlerBarberHours = []
 
-        const getBarber = await Barbers.findOne({
-            where: {
-                id: barberID,
-                status: 'ativo'
-            }
-        })
-
-        const hoursScheduleds = await HorariosAgendados.findAll({
-            attributes: ['horario'],
-            where: {
-                dia_semana: dia,
-                status: 'em espera'
-            }
-        })
-
-        hoursScheduleds.map((hoursScheduled) => {
-            arrayHoursScheludes.push(hoursScheduled.horario)
-        })
-
-
-        const hoursSuspendeds = await HorariosSupensos.findAll({
-            attributes: ['horario'],
-            where: {
-                dia
-            }
-        })
-
-        hoursSuspendeds.map((hourSuspended) => {
-            arrayHoursSuspendeds.push(hourSuspended.horario)
-        })
-
-
-        const getHourBarbers = await HorariosBarbeiros.findAll({
-            attributes: ['hora'],
-            where: {
-                dia_semana: daysOfTheWeek[dateMoment.day()],
-                id_barbeiro: getBarber.id
-            }
-        })
-        var hoursBarbers = []
-
-        getHourBarbers.map((hourBarber) => {
-            if (!arrayHoursScheludes.includes(hourBarber.hora)) {
-                if (!arrayHoursSuspendeds.includes(hourBarber.hora)) {
-                    hoursBarbers.push(hourBarber)
+            const hoursScheduleds = await HorariosAgendados.findAll({
+                attributes: ['horario'],
+                where: {
+                    dia_semana: dateSelectFormated,
+                    status: 'em espera',
+                    id_barbeiro: barberID
                 }
+            })
+
+            const hoursSuspendeds = await HorariosSupensos.findAll({
+                attributes: ['horario'],
+                where: {
+                    dia: dateSelectFormated,
+                    id_barbeiro: barberID
+                }
+            })
+
+            if (hoursScheduleds.length > 0) {
+                hoursScheduleds.map((hourScheduled) => {
+                    arrayHandlerHoursOccupeds.push(hourScheduled.horario)
+                })
 
             }
-        })
 
-        var objBarber = {
-            id: getBarber.id,
-            name: getBarber.name,
-            hours: hoursBarbers
+            if (hoursSuspendeds.length > 0) {
+                hoursSuspendeds.map((hourSupended) => {
+                    if (!arrayHandlerHoursOccupeds.includes(hourSupended.horario)) {
+                        arrayHandlerHoursOccupeds.push(hourSupended.horario)
+                    }
+                })
+            }
+
+            const getHourBarbers = await HorariosBarbeiros.findAll({
+                attributes: ['hora'],
+                where: {
+                    dia_semana: daysOfTheWeek[dateSelect.day()],
+                    id_barbeiro: barberID
+                }
+            })
+
+            getHourBarbers.map((hourBarber) => {
+                if (!arrayHandlerHoursOccupeds.includes(hourBarber.hora)) {
+                    arrayHandlerBarberHours.push(hourBarber)
+                }
+            })
+
+            objDate = {
+                date: dateSelectFormated,
+                hours: arrayHandlerBarberHours
+            }
+
+            arrayDateHoursSchelueds.push(objDate)
         }
 
-        barber.push(objBarber)
+        arrayDateHoursSchelueds.map((value) => {
+            if(value.hours.length < 1){
+                datesOccupeds.push(value.date)
+            }
+        })
 
-        res.json({ success: true, barber })
+        res.json({ success: true, arrayDateHoursSchelueds, datesOccupeds })
 
     }
 
