@@ -104,8 +104,8 @@ class HorariosController {
             'Sábado'
         ]
         var arrayDateHoursSchelueds = []
-        var datesOccupeds = []
-        var datesFree = []
+        var datesOccupeds = {}
+        var datesFree = {}
 
         for (let i = 1; i <= 15; i++) {
             let dateMomentLoop = moment(today).subtract(1, 'day')
@@ -169,11 +169,15 @@ class HorariosController {
             arrayDateHoursSchelueds.push(objDate)
         }
 
-        arrayDateHoursSchelueds.map((value) => {
+        arrayDateHoursSchelueds.map((value, i) => {
             if(value.hours.length < 1){
-                datesOccupeds.push(value.date)
+                datesOccupeds[value.date] = {
+                    dotColor: 'red'
+                }
             }else{
-                datesFree.push(value.date)
+                datesFree[value.date] = {
+                    dotColor: 'green'
+                }
             }
         })
 
