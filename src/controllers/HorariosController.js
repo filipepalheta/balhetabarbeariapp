@@ -172,10 +172,12 @@ class HorariosController {
         arrayDateHoursSchelueds.map((value, i) => {
             if(value.hours.length < 1){
                 datesOccupeds[value.date] = {
+                    marked: true,
                     dotColor: 'red'
                 }
             }else{
                 datesFree[value.date] = {
+                    marked: true,
                     dotColor: 'green'
                 }
             }
