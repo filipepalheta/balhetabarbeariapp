@@ -1,4 +1,4 @@
-import instance from "../config/conn";
+import instance from "../config/conn.js";
 import { DataTypes } from "sequelize";
 
 const Users = instance.define('users', {
