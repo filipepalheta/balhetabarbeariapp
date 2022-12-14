@@ -19,7 +19,7 @@ class LoginController {
                 if (result) {
                     res.json({ success: true, user })
                 } else {
-                    res.json({ success: false, message: 'Email ou senha incorretos.' })
+                    res.json({ success: false, message: 'Email ou senha incorretos' })
                 }
             })
         } else {
