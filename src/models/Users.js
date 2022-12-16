@@ -22,7 +22,7 @@ const Users = instance.define('users', {
     },
     avatar: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     token: {
         type: DataTypes.STRING,
@@ -37,7 +37,7 @@ const Users = instance.define('users', {
     },
     nickname: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     status: {
         type: DataTypes.ENUM('ativo', 'inativo')

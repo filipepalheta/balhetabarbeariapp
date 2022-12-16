@@ -21,5 +21,6 @@ router.get('/barbers', BarbeirosController.getBarbeiros)
 router.get('/hours-suspendeds', HorariosController.getSuspendedHoursFromBarber)
 
 router.post('/login', LoginController.signin)
+router.post('/cadastrar', LoginController.signin)
 
 export default router;
