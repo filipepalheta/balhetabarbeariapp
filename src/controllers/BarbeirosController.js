@@ -270,22 +270,33 @@ class BarbeirosController {
 
     static getScheludes = async (req, res) => {
         const idUsuario = req.query.idUsuario
+        const offset = req.query.offset
 
-        if (idUsuario) {
+        if (idUsuario && offset) {
             const agendamento = await HorariosAgendados.findAll({
                 where: {
-                    id_usuario: idUsuario
+                    id_usuario: idUsuario,
+                    status: 'finalizado'
                 },
-                limit: 200
+                limit: 8,
+                offset: parseInt(offset)
+            })
+
+            const agendamentoEmEspera = await HorariosAgendados.findOne({
+                where: {
+                    id_usuario: idUsuario,
+                    status: 'em espera'
+                },
+                limit: 8,
+                offset: parseInt(offset)
             })
 
             if (agendamento) {
-                var response = []
+                var agendamentosFinalizados = []
+                var agendamentosEmEspera = []
                 var meses = [
                     "Jan", "Fev", "Mar", "Abril", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"
                 ]
-
-                
 
                 await Promise.all(
                     agendamento.map(async (item) => {
@@ -323,11 +334,54 @@ class BarbeirosController {
                             hora: item.horario
                         }
 
-                        response.push(obj)
+                        agendamentosFinalizados.push(obj)
                     })
+
+
                 )
 
-                return res.json({ success: true, response })
+
+                if (agendamentoEmEspera) {
+                    let servicoNome = ""
+                    let servicos = await ServicosAgendados.findAll({
+                        where: {
+                            id_agendamento: agendamentoEmEspera.id
+                        }
+                    })
+                    const datetime = new Date(agendamentoEmEspera.dia_semana + ' 00:00:00')
+                    let barbeiro = await Barbers.findOne({
+                        where: {
+                            id: agendamentoEmEspera.id_barbeiro
+                        }
+                    })
+
+                    await Promise.all(servicos.map(async (servico) => {
+                        let servi = await Servicos.findOne({
+                            where: {
+                                id: servico.id_servico
+                            }
+                        })
+                        servicoNome += servi.servico_nome + ' '
+                    })
+                    )
+
+                    let objEmEspera = {
+                        id: agendamentoEmEspera.id,
+                        barbeiro: barbeiro.name,
+                        servicos: servicoNome,
+                        id_agendamento: agendamentoEmEspera.id,
+                        foto_barbeiro: barbeiro.foto_site,
+                        data: `${datetime.getDate()} ${meses[datetime.getMonth()]}`,
+                        dia_semana: agendamento.dia_semana_string,
+                        hora: agendamentoEmEspera.horario
+                    }
+
+                    agendamentosEmEspera.push(objEmEspera)
+                }
+
+
+
+                return res.json({ success: true, agendamentosFinalizados, agendamentosEmEspera })
             }
         }
 
