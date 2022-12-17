@@ -28,11 +28,11 @@ class BarbeirosController {
 
             var diaSemana = [
                 "Domingo",
-                "Segunda",
-                "Terça",
-                "Quarta",
-                "Quinta",
-                "Sexta",
+                "Segunda-Feira",
+                "Terça-Feira",
+                "Quarta-Feira",
+                "Quinta-Feira",
+                "Sexta-Feira",
                 "Sábado"
             ]
 
