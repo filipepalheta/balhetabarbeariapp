@@ -258,7 +258,7 @@ class BarbeirosController {
                     }
                 }
             } else {
-                return res.json({ success: false, msg: 'Você já possui um agendamento ative, para agendar novamente cancele o outro agendamento.' })
+                return res.json({ success: false, msg: 'Você já possui um agendamento ativo, para agendar novamente cancele o outro agendamento.' })
             }
         }
 
