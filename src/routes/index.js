@@ -23,7 +23,7 @@ router.get('/agendamentos', BarbeirosController.getScheludes)
 router.get('/hours-suspendeds', HorariosController.getSuspendedHoursFromBarber)
 
 router.post('/login', LoginController.signin)
-router.post('/cadastrar', LoginController.signin)
+router.post('/cadastrar', LoginController.register)
 
 
 

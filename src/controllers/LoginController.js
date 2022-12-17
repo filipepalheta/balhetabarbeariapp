@@ -28,7 +28,7 @@ class LoginController {
         }
     }
 
-    static signin = async (req, res) => {
+    static register = async (req, res) => {
         var dados = {
             nome: req.body.nome,
             email: req.body.email,
