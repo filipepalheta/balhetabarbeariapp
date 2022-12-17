@@ -328,7 +328,7 @@ class BarbeirosController {
                             id_agendamento: item.id,
                             foto_barbeiro: barbeiro.foto_site,
                             data: `${datetime.getDate()} ${meses[datetime.getMonth()]}`,
-                            dia_semana: agendamento.dia_semana_string,
+                            dia_semana: item.dia_semana_string,
                             hora: item.horario,
                             status: 'finalizado'
                         }
@@ -371,7 +371,7 @@ class BarbeirosController {
                         id_agendamento: agendamentoEmEspera.id,
                         foto_barbeiro: barbeiro.foto_site,
                         data: `${datetime.getDate()} ${meses[datetime.getMonth()]}`,
-                        dia_semana: agendamento.dia_semana_string,
+                        dia_semana: agendamentoEmEspera.dia_semana_string,
                         hora: agendamentoEmEspera.horario,
                         status: 'em espera'
                     }
