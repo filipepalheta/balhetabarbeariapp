@@ -22,8 +22,7 @@ class BarbeirosController {
             hora: req.body.hora,
             servicos: req.body.services
         }
-
-        console.log(dados)
+        
 
         if (dados.idUser && dados.barbeiro && dados.data && dados.hora && dados.servicos) {
 
@@ -330,7 +329,8 @@ class BarbeirosController {
                             foto_barbeiro: barbeiro.foto_site,
                             data: `${datetime.getDate()} ${meses[datetime.getMonth()]}`,
                             dia_semana: agendamento.dia_semana_string,
-                            hora: item.horario
+                            hora: item.horario,
+                            status: 'finalizado'
                         }
 
                         agendamentosFinalizados.push(obj)
@@ -372,7 +372,8 @@ class BarbeirosController {
                         foto_barbeiro: barbeiro.foto_site,
                         data: `${datetime.getDate()} ${meses[datetime.getMonth()]}`,
                         dia_semana: agendamento.dia_semana_string,
-                        hora: agendamentoEmEspera.horario
+                        hora: agendamentoEmEspera.horario,
+                        status: 'em espera'
                     }
 
                     agendamentosEmEspera.push(objEmEspera)
