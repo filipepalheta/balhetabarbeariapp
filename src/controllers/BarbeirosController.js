@@ -3,6 +3,7 @@ import Users from "../models/Users.js"
 import HorariosAgendados from "../models/Horarios_Agendados.js"
 import ServicosAgendados from "../models/Servicos_Agendados.js"
 import nodemailer from 'nodemailer'
+import Servicos from "../models/Servicos.js"
 
 class BarbeirosController {
 
@@ -133,7 +134,7 @@ class BarbeirosController {
                                                                         <tr>                            
                                                                             <td style="padding:0 0 36px 0;color:#153643;">                            
                                                                                 <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Novo Agendamento</h1>                            
-                                                                                <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Olá, ${barber.name}. você tem um novo agendamento marcado para o dia: ${datetime.toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})} às ${dados.hora}h.</p>                                                                                
+                                                                                <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Olá, ${barber.name}. você tem um novo agendamento marcado para o dia: ${datetime.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })} às ${dados.hora}h.</p>                                                                                
                                                                                 <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Para mais informações, acompanhe o agendamento clicando no link abaixo: </p>                           
                                                                         <a href="https://www.sistema.palhetabarbearia.com/" style="background: #B48E40;                            
                                                                         color: white;                            
@@ -209,7 +210,7 @@ class BarbeirosController {
                                                                         <tr>                            
                                                                             <td style="padding:0 0 36px 0;color:#153643;">                            
                                                                                 <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Novo Agendamento</h1>                            
-                                                                                <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Olá, ${user.name}, muito obrigado por escolher nossos serviços! Seu agendamento está confirmado para o dia: ${datetime.toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})} às ${dados.hora}h.</p>                                                                                
+                                                                                <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Olá, ${user.name}, muito obrigado por escolher nossos serviços! Seu agendamento está confirmado para o dia: ${datetime.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })} às ${dados.hora}h.</p>                                                                                
                                                                                 <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Caso tenha alguma dúvida, nos contate com o e-mail abaixo: </p>                           
                                                                         <a href="#" style="background: #B48E40;                            
                                                                         color: white;                            
@@ -265,6 +266,72 @@ class BarbeirosController {
 
 
         res.json({ success: false, msg: 'Ocorreu um erro ao finalizar o agendamento, por favor, tente novamente mais tarde.' })
+    }
+
+    static getScheludes = async (req, res) => {
+        const idUsuario = req.query.idUsuario
+
+        if (idUsuario) {
+            const agendamento = await HorariosAgendados.findAll({
+                where: {
+                    id_usuario: idUsuario
+                },
+                limit: 200
+            })
+
+            if (agendamento) {
+                var response = []
+                var meses = [
+                    "Jan", "Fev", "Mar", "Abril", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+                ]
+
+                
+
+                await Promise.all(
+                    agendamento.map(async (item) => {
+                        let servicoNome = ""
+                        let servicos = await ServicosAgendados.findAll({
+                            where: {
+                                id_agendamento: item.id
+                            }
+                        })
+                        const datetime = new Date(item.dia_semana + ' 00:00:00')
+                        let barbeiro = await Barbers.findOne({
+                            where: {
+                                id: item.id_barbeiro
+                            }
+                        })
+
+                        await Promise.all(servicos.map(async (servico) => {
+                            let servi = await Servicos.findOne({
+                                where: {
+                                    id: servico.id_servico
+                                }
+                            })
+                            servicoNome += servi.servico_nome + ' '
+                        })
+                        )
+
+                        let obj = {
+                            barbeiro: barbeiro.name,
+                            servicos: servicoNome,
+                            id_agendamento: item.id,
+                            foto_barbeiro: barbeiro.foto_site,
+                            data: `${datetime.getDate()} ${meses[datetime.getMonth()]}`,
+                            dia_semana: agendamento.dia_semana_string,
+                            hora: item.horario
+                        }
+
+                        response.push(obj)
+                    })
+                )
+
+                return res.json({ success: true, response })
+            }
+        }
+
+        res.json({ success: false, msg: 'Ocorreu um erro interno' })
+
     }
 }
 

@@ -18,6 +18,7 @@ router.get('/services', ServicosController.getServices)
 
 router.get('/barbers', BarbeirosController.getBarbeiros)
 router.post('/agendar', BarbeirosController.schedule)
+router.get('/agendamentos', BarbeirosController.getScheludes)
 
 router.get('/hours-suspendeds', HorariosController.getSuspendedHoursFromBarber)
 
