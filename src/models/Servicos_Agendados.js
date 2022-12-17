@@ -1,7 +1,7 @@
 import instance from "../config/conn.js";
 import { DataTypes } from "sequelize";
 
-const ServicosAgendados = instance.define('servicos', {
+const ServicosAgendados = instance.define('servicos_agendados', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

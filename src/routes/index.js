@@ -17,10 +17,13 @@ router.get('/ping', (req, res) => {
 router.get('/services', ServicosController.getServices)
 
 router.get('/barbers', BarbeirosController.getBarbeiros)
+router.post('/agendar', BarbeirosController.schedule)
 
 router.get('/hours-suspendeds', HorariosController.getSuspendedHoursFromBarber)
 
 router.post('/login', LoginController.signin)
 router.post('/cadastrar', LoginController.signin)
+
+
 
 export default router;
