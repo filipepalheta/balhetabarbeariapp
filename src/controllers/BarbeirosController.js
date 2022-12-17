@@ -313,6 +313,7 @@ class BarbeirosController {
                         )
 
                         let obj = {
+                            id: item.id,
                             barbeiro: barbeiro.name,
                             servicos: servicoNome,
                             id_agendamento: item.id,
