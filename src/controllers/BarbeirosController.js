@@ -23,6 +23,8 @@ class BarbeirosController {
             servicos: req.body.services
         }
 
+        console.log(dados)
+
         if (dados.idUser && dados.barbeiro && dados.data && dados.hora && dados.servicos) {
 
             var diaSemana = [
@@ -261,9 +263,6 @@ class BarbeirosController {
                 return res.json({ success: false, msg: 'Você já possui um agendamento ativo, para agendar novamente cancele o outro agendamento.' })
             }
         }
-
-
-
 
         res.json({ success: false, msg: 'Ocorreu um erro ao finalizar o agendamento, por favor, tente novamente mais tarde.' })
     }
