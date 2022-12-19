@@ -403,6 +403,46 @@ class BarbeirosController {
         res.json({ success: false, msg: 'Ocorreu um erro interno' })
 
     }
+
+    static deleteSchedule = async (req, res) => {
+        const idSchedule = parseInt(req.body.schId)
+
+        if(idSchedule){
+            const schedule = await HorariosAgendados.findOne({
+                where: {
+                    id: idSchedule
+                }
+            })
+
+            if(schedule){
+                const services = await ServicosAgendados.findAll({
+                    where: {
+                        id_agendamento: schedule.id
+                    }
+                })
+
+                await HorariosAgendados.destroy({
+                    where: {
+                        id: schedule.id
+                    }
+                })
+
+                await Promise.all(
+                    services.map(async (service) => {
+                        await ServicosAgendados.destroy({
+                            where: {
+                                id: service.id
+                            }
+                        })
+                    })
+                )
+
+               
+            }
+        }
+
+        res.json({success: true})
+    }
 }
 
 export default BarbeirosController
