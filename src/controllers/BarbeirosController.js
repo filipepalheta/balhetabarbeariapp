@@ -22,7 +22,7 @@ class BarbeirosController {
             hora: req.body.hora,
             servicos: req.body.services
         }
-        
+
 
         if (dados.idUser && dados.barbeiro && dados.data && dados.hora && dados.servicos) {
 
@@ -270,22 +270,39 @@ class BarbeirosController {
         const idUsuario = req.query.idUsuario
         const offset = req.query.offset
 
+        const paginate = (query, { page, pageSize }) => {
+            const offset = page * pageSize;
+            const limit = pageSize;
+
+            return {
+                ...query,
+                offset,
+                limit,
+            };
+        };
+
         if (idUsuario && offset) {
-            const agendamento = await HorariosAgendados.findAll({
-                where: {
-                    id_usuario: idUsuario,
-                    status: 'finalizado'
-                },
-                limit: 8,
-                offset: parseInt(offset)
-            })
+            const agendamento = await HorariosAgendados.findAll(
+                paginate(
+                    {
+                        order: [
+                            ['id', 'desc']
+                        ],
+                        where: {
+                            id_usuario: idUsuario,
+                            status: 'finalizado'
+                        }, // conditions
+                    },
+                    { page: parseInt(offset), pageSize: 7},
+                )
+            )
 
             const agendamentoEmEspera = await HorariosAgendados.findOne({
                 where: {
                     id_usuario: idUsuario,
                     status: 'em espera'
                 },
-                limit: 8,
+                limit: 1,
                 offset: parseInt(offset)
             })
 
@@ -378,10 +395,7 @@ class BarbeirosController {
 
                     agendamentosEmEspera.push(objEmEspera)
                 }
-
-                console.log('Agendamentos Finalizados: ', agendamentosFinalizados)
-                console.log('Agendamentos Em Espera: ', agendamentosEmEspera)
-
+                agendamentosFinalizados.sort((a, b) => parseFloat(b.id) - parseFloat(a.id));
                 return res.json({ success: true, agendamentosFinalizados, agendamentosEmEspera })
             }
         }
