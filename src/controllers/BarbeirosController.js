@@ -293,7 +293,7 @@ class BarbeirosController {
                             status: 'finalizado'
                         }, // conditions
                     },
-                    { page: parseInt(offset), pageSize: 7},
+                    { page: parseInt(offset), pageSize: 7 },
                 )
             )
 
@@ -405,43 +405,42 @@ class BarbeirosController {
     }
 
     static deleteSchedule = async (req, res) => {
-        const idSchedule = parseInt(req.body.schId)
 
-        if(idSchedule){
-            const schedule = await HorariosAgendados.findOne({
+
+        const schedule = await HorariosAgendados.findOne({
+            where: {
+                status: 'em espera'
+            }
+        })
+
+        if (schedule) {
+            const services = await ServicosAgendados.findAll({
                 where: {
-                    id: idSchedule
+                    id_agendamento: schedule.id
                 }
             })
 
-            if(schedule){
-                const services = await ServicosAgendados.findAll({
-                    where: {
-                        id_agendamento: schedule.id
-                    }
-                })
+            await HorariosAgendados.destroy({
+                where: {
+                    id: schedule.id
+                }
+            })
 
-                await HorariosAgendados.destroy({
-                    where: {
-                        id: schedule.id
-                    }
-                })
-
-                await Promise.all(
-                    services.map(async (service) => {
-                        await ServicosAgendados.destroy({
-                            where: {
-                                id: service.id
-                            }
-                        })
+            await Promise.all(
+                services.map(async (service) => {
+                    await ServicosAgendados.destroy({
+                        where: {
+                            id: service.id
+                        }
                     })
-                )
+                })
+            )
 
-               
-            }
+
         }
 
-        res.json({success: true})
+
+        res.json({ success: true })
     }
 }
 
