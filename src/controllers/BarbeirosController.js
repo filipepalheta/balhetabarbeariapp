@@ -379,7 +379,8 @@ class BarbeirosController {
                     agendamentosEmEspera.push(objEmEspera)
                 }
 
-
+                console.log('Agendamentos Finalizados: ', agendamentosFinalizados)
+                console.log('Agendamentos Em Espera: ', agendamentosEmEspera)
 
                 return res.json({ success: true, agendamentosFinalizados, agendamentosEmEspera })
             }
